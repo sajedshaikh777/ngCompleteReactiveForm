@@ -1,0 +1,166 @@
+<!-- {{profileForm.status}} -->
+
+<form [formGroup]="profileForm" (ngSubmit)="onSubmit()" autocomplete="off">
+
+    <div class="form-group row">
+        <label for="firstname" class="col-sm-4 col-form-label">First Name</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="firstname" formControlName="firstName" required>
+            <div *ngIf="profileForm.controls.firstName.invalid && (profileForm.controls.firstName.dirty || profileForm.controls.firstName.touched)"
+                class="alert alert-danger mt-2">
+                <div *ngIf="profileForm.controls.firstName.errors.required">
+                    First Name is required.
+                </div>
+                <div *ngIf="profileForm.controls.firstName.errors.minlength">
+                    First Name must be at least 4 characters long.
+                </div>
+                <div *ngIf="profileForm.controls.firstName.errors.maxlength">
+                    First Name must be at most 6 characters long.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="lastname" class="col-sm-4 col-form-label">Last Name</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="lastname" formControlName="lastName">
+            <div *ngIf="profileForm.controls.lastName.invalid && (profileForm.controls.lastName.dirty || profileForm.controls.lastName.touched)"
+                class="alert alert-danger mt-2">
+                <div *ngIf="profileForm.controls.lastName.errors.required">
+                    Last Name is required.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="websiteurl" class="col-sm-4 col-form-label">Website URL</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="websiteurl" formControlName="websiteUrl">
+            <div *ngIf="profileForm.controls.websiteUrl.errors &&
+                        profileForm.controls.websiteUrl.dirty &&
+                        profileForm.controls.websiteUrl.errors.validUrl"
+                class="alert alert-danger mt-2">
+                Oops, only urls served over https and only from the .io top-level domain are accepted. Talk about
+                restrictions!
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="amount" class="col-sm-4 col-form-label">Amount</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="amount" formControlName="amount" pattern="^[0-9]+$" maxlength="6"
+                required>
+            <div *ngIf="profileForm.controls.amount.invalid && (profileForm.controls.amount.dirty || profileForm.controls.amount.touched)"
+                class="alert alert-danger mt-2">
+                <div *ngIf="profileForm.controls.amount.errors.required">
+                    Amount is required.
+                </div>
+                <div *ngIf="profileForm.controls.amount.errors.pattern">
+                    Please enter a valid amount.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="recurring" class="col-sm-4 col-form-label">Recurring</label>
+        <div class="col-sm-8">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="inlineRadio1" value="no" checked formControlName="recurring">
+                <label class="form-check-label" for="inlineRadio1">No</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="inlineRadio2" value="yes" formControlName="recurring">
+                <label class="form-check-label" for="inlineRadio2">Yes</label>
+            </div>
+        </div>
+    </div>
+
+    <!-- {{profileForm.controls.recurring.value}} -->
+
+
+
+    <!-- {{profileForm.controls.amount.errors | json}} -->
+
+
+    <div formGroupName="address" *ngIf="profileForm.controls.recurring.value === 'yes'">
+
+        <div class="form-group row">
+            <label for="street" class="col-sm-4 col-form-label">Street</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="street" formControlName="street">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="city" class="col-sm-4 col-form-label">City</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="city" formControlName="city">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="state" class="col-sm-4 col-form-label">State</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="state" formControlName="state">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="zip" class="col-sm-4 col-form-label">Zip Code</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="zip" formControlName="zip" maxlength="6">
+                <div *ngIf="profileForm.controls.address.controls.zip.invalid && (profileForm.controls.address.controls.zip.dirty || profileForm.controls.address.controls.zip.touched)"
+                    class="alert alert-danger mt-2">
+                    <div *ngIf="profileForm.controls.address.controls.zip.errors.required">
+                        Zip code is required.
+                    </div>
+                    <div *ngIf="profileForm.controls.address.controls.zip.errors.minlength">
+                        Zip code must be 6 digit long.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <!-- {{profileForm.controls.aliases.length}} -->
+
+    <div formArrayName="aliases">
+        <h3>Aliases</h3>
+
+        <div *ngFor="let address of aliases.controls; let i=index">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group row">
+                        <label for="alias" class="col-sm-6 col-form-label">Alias {{i+1}}</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="alias" [formControlName]="i">
+                        </div>
+                    </div>
+                    <!-- {{profileForm.controls.aliases.controls[i].value}} -->
+
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-link" (click)="removeAlias(i)" *ngIf="profileForm.controls.aliases.length > 1">
+                        <i class="fa fa-times" aria-hidden="true"></i> Remove Alias {{i+1}}
+                    </button>
+                </div>
+            </div>
+            <hr>
+        </div>
+
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary" (click)="addAlias()" *ngIf="profileForm.controls.aliases.length < 3">
+                <i class="fa fa-plus"></i>
+                Add Alias
+            </button>
+        </div>
+
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="!profileForm.valid">Submit</button>
+
+</form>
